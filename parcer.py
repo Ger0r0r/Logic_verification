@@ -208,7 +208,18 @@ def calculate_outputs(data, inputs, outputs):
 with open(tests_inputs, 'r') as file:
     lines = file.readlines()  # Получаем список строк
     for line in lines:
-        test = line.strip()
+        # print(line)
+        # print(int(line, 16))
+        # print(bin(int(line, 16)))
+        # print(bin(int(line, 16))[2:])
+        # print(bin(int(line, 16))[2:].zfill(num_input))
+
+        test = bin(int(line, 16))[2:].zfill(num_input)
+        # test = line.strip()
+        # print(test, type(test))
+        # for i in test:
+        #     print(i)
+
         outputs = calculate_outputs(nodes, test, out_nodes)
         outputs = ''.join(map(str, outputs))
         outputs = int(outputs, 2)
