@@ -124,7 +124,7 @@ $$\delta : ((inv,tag),s) \rightarrow s'$$
 s':fulltag'_i =
 \begin{cases}
 	fulltag_i & v_i = 0 \lor (v_i = 1 \land age_k < age_i)\\
-	(1,tag_i,age_{i}+1,modified_i) & v_i = 1 \land i \neq k \land age_i < age_k \\
+	(1,tag_i,age_{i}-1,modified_i) & v_i = 1 \land i \neq k \land age_i < age_k \\
 	(0,\varnothing) & i = k
 \end{cases}
 \]
