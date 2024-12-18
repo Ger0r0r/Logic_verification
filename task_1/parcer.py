@@ -86,6 +86,7 @@ for i in range(len(nodes)):
 
 # Функция для вычисления выходов схемы
 def calculate_outputs(data, inputs, outputs):
+    # print("INPUTS",inputs)
     # Все ноды теперь надо занулить -- существуют, но не посещены
     for i in data:
         i["status"] = 0
@@ -178,7 +179,9 @@ def calculate_outputs(data, inputs, outputs):
 
         temp_res = gate["table"][table_i]
         # print("RES OF TABLE", temp_res)
-        gate["out"] = number_like_list(temp_res, num_of_out)
+        new_out = number_like_list(temp_res, num_of_out)
+        new_out = new_out[::-1]
+        gate["out"] = new_out
 
         return gate
 
@@ -192,7 +195,7 @@ def calculate_outputs(data, inputs, outputs):
         if (is_done):
             gate["status"] = 2
             gate["in"] = new_gate_in
-
+            # print(gate)
             gate = set_out(gate)
 
             task.pop(i)
@@ -216,6 +219,9 @@ def calculate_outputs(data, inputs, outputs):
     while (len(task)):
         task, current_task = do_task(task, current_task, data, inputs)
 
+    # for i in data:
+    #     print("NAME", i["name"], "INPUTS", i["in"], "RESULT", i["out"])
+
     def take_result(outputs, data, inputs):
         result = [" "] * len(outputs)
         for i in range(len(outputs)):
@@ -225,13 +231,14 @@ def calculate_outputs(data, inputs, outputs):
                 gate, gate_i = find_by_name(name, data)
                 result[i] = gate["out"][int(number)]
             else:
-                result[i] = inputs[int(number)]
+                result[i] = inputs[int(outputs[i])]
+                # print("FROM", number, "TAKE", result[i], "TO", i)
+        # print("RESULT RAW",result)
         return result
 
     # print("!!!RESULTS!!!")
     result = take_result(outputs, data, inputs)
     return result
-
 
 def reverse_pins(pins):
     return ''.join(reversed(pins))
@@ -257,4 +264,5 @@ with open(tests_inputs, 'r') as file:
         outputs = ''.join(map(str, outputs))
         outputs = reverse_pins(outputs)
         outputs = int(outputs, 2)
-        print(f"0x{outputs}")
+
+        print(hex(outputs))
