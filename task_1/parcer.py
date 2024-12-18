@@ -1,4 +1,3 @@
-import networkx as nx
 import matplotlib.pyplot as plt
 import json
 import re
@@ -6,6 +5,9 @@ import sys
 
 json_name = sys.argv[1]
 tests_inputs = sys.argv[2]
+
+# json_name = "task_example.json"
+# tests_inputs = "test_new.txt"
 
 f = open(json_name, "r")
 data = json.load(f)
@@ -51,6 +53,7 @@ for i in range(len(raw_nodes)):
     nodes.append(temp)
 
 def get_name_number (raw_name):
+    # print(raw_name)
     name = ''
     number = ''
 
@@ -91,8 +94,10 @@ def calculate_outputs(data, inputs, outputs):
     degree = 0
     task = []
     for i in list(outputs):
-        single_task, trash = get_name_number(i)
-        task.append(single_task)
+        # print(type(i),i)
+        if (isinstance(i, str)):
+            single_task, trash = get_name_number(i)
+            task.append(single_task)
 
     # print(task)
 
@@ -122,11 +127,19 @@ def calculate_outputs(data, inputs, outputs):
                 gate, gate_i = find_by_name(name, data)
                 state = gate["status"]
                 if (state == 2):
+                    # print("FUUUCK")
+                    # print(gate)
+                    # print(gate["out"])
+                    # print(gate["out"][int(number)])
                     gate_in[i] = gate["out"][int(number)]
+                    # print("TRY_WORK STATE 2",gate_in)
                 else:
                     res = 0
             else:
                 gate_in[i] = init_input[task_input[i]]
+                # print("TRY_WORK ELSE",gate_in)
+
+        # print("TRY_WORK",gate_in)
         return res, gate_in
 
     def add_new_tasks (task_input, task, data):
@@ -145,17 +158,26 @@ def calculate_outputs(data, inputs, outputs):
     def set_out(gate):
 
         def number_like_list(number, total_digits):
-            return list(str(number).zfill(total_digits))
+            bin_number = bin(number)[2:]
+            return list(str(bin_number).zfill(total_digits))
 
+        # print(gate)
         num_of_in = gate["num_in"]
         num_of_out = gate["num_out"]
+        # print("NUM INS",num_of_in)
+        # print("NUM OUTS",num_of_out)
 
         table_i = 0
 
         for i in range(num_of_in):
+            # print(gate["in"])
+            # print(gate["in"][i])
+            # print(int(gate["in"][i]))
             table_i += int(gate["in"][i]) * pow(2, i)
 
+
         temp_res = gate["table"][table_i]
+        # print("RES OF TABLE", temp_res)
         gate["out"] = number_like_list(temp_res, num_of_out)
 
         return gate
@@ -194,16 +216,25 @@ def calculate_outputs(data, inputs, outputs):
     while (len(task)):
         task, current_task = do_task(task, current_task, data, inputs)
 
-    def take_result(outputs, data):
+    def take_result(outputs, data, inputs):
         result = [" "] * len(outputs)
         for i in range(len(outputs)):
-            name, number = get_name_number(outputs[i])
-            gate, gate_i = find_by_name(name, data)
-            result[i] = gate["out"][int(number)]
+            # print(outputs[i])
+            if isinstance(outputs[i], str):
+                name, number = get_name_number(outputs[i])
+                gate, gate_i = find_by_name(name, data)
+                result[i] = gate["out"][int(number)]
+            else:
+                result[i] = inputs[int(number)]
         return result
 
-    result = take_result(outputs, data)
+    # print("!!!RESULTS!!!")
+    result = take_result(outputs, data, inputs)
     return result
+
+
+def reverse_pins(pins):
+    return ''.join(reversed(pins))
 
 with open(tests_inputs, 'r') as file:
     lines = file.readlines()  # Получаем список строк
@@ -214,13 +245,16 @@ with open(tests_inputs, 'r') as file:
         # print(bin(int(line, 16))[2:])
         # print(bin(int(line, 16))[2:].zfill(num_input))
 
-        test = bin(int(line, 16))[2:].zfill(num_input)
+        test = bin(int(line, 0))[2:].zfill(num_input)
         # test = line.strip()
         # print(test, type(test))
         # for i in test:
         #     print(i)
+        # print(type(test))
 
+        test = reverse_pins(test)
         outputs = calculate_outputs(nodes, test, out_nodes)
         outputs = ''.join(map(str, outputs))
+        outputs = reverse_pins(outputs)
         outputs = int(outputs, 2)
         print(f"0x{outputs}")

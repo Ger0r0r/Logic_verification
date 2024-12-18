@@ -24,7 +24,7 @@ $$A_m = (S_t,X,Y,\delta:S\times X \rightarrow S, s_0 \in S, \lambda : S\times X 
 
 	\item Начальное состояние -- $s_0 = [(0, \varnothing),(0, \varnothing),...,(0, \varnothing)]$
 	\item Входной алфавит -- $X = \{ld,st,inv\}\times\{tag_i,i=\overline{0,32}\}$
-	\item Выходной алфавит -- $Y = \{ld,st,st+ld,\varnothing\}\times\{tag_i,i=\overline{0,32}\}$
+	\item Выходной алфавит -- $Y = \{ld,st,st+ld,\varnothing\}$
 	\item Функции переходов -- $\delta: (s,x)\rightarrow s'$
 	\item Функции выходов -- $\lambda: (s,x) \rightarrow y$
 \end{itemize}
@@ -42,33 +42,33 @@ s':fulltag'_i =
 	(1,tag,1,1) & i = k
 \end{cases}
 \]
-$$y = (\varnothing,tag)$$
+$$y = \varnothing$$
 
 Промах без вытеснения: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\exists j: v_j = 0)$, j -- минимальное из свободных (так как политика заведения -- первый свободный)
 \[
 s':fulltag'_i =
 \begin{cases}
-	fulltag_i & v_i = 0 \\
-	(1,tag_i,age_{i}+1,modified_i) & v_i = 1 \land i \neq j \\
-	(1,tag,1,1) & i = j
+	fulltag_i & v_i = 0 \land i \neq j \\
+	(1,tag_i,age_{i}+1,modified_i) & v_i = 1  \\
+	(1,tag,1,1) & v_i = 0 \land i = j
 \end{cases}
 \]
-$$y = (st,tag)$$
+$$y = ld$$
 
-Промах с вытеснением: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\nexists j: v_j = 0)$
+Промах с вытеснением: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\nexists j: v_j = 0) \land (\exists d: age_d = 32)$
 \[
 s':fulltag'_i =
 \begin{cases}
-	(1,tag_i,age_{i}+1,modified_i) & i : age_i \neq 32 \\
-	(1,tag,1,1) & i : age_i = 32
+	(1,tag_i,age_{i}+1,modified_i) & i \neq d \\
+	(1,tag,1,1) & i = d
 \end{cases}
 \]
 
 \[
 y =
 \begin{cases}
-	(st,tag) & \exists i : age_i = 32 \land modified_i = 1 \\
-	(\varnothing,tag) & \exists i : age_i = 32 \land modified_i = 0
+	ld+st & modified_d = 1 \\
+	ld & modified_d = 0
 \end{cases}
 \]
 
@@ -80,38 +80,38 @@ $$\delta : ((ld,tag),s) \rightarrow s'$$
 \[
 s':fulltag'_i =
 \begin{cases}
-	fulltag_i & v_i = 0 \lor (v_i = 1 \land age_k < age_i)\\
-	(1,tag_i,age_{i}+1,modified_i) & v_i = 1 \land i \neq k \land age_i < age_k \\
+	fulltag_i & v_i = 0 \lor (v_i = 1 \land age_i > age_k)\\
+	(1,tag_i,age_{i}+1,modified_i) & v_i = 1 \land age_i < age_k \\
 	(1,tag,1,modified_i) & i = k
 \end{cases}
 \]
-$$y = (\varnothing,tag)$$
+$$y = \varnothing$$
 
 Промах без вытеснения: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\exists j: v_j = 0)$
 \[
 s':fulltag'_i =
 \begin{cases}
-	fulltag_i & v_i = 0 \\
-	(1,tag_i,age_{i}+1,modified_i) & v_i = 1 \land i \neq j \\
-	(1,tag,1,0) & i = j
+	fulltag_i & v_i = 0 \land i \neq j \\
+	(1,tag_i,age_{i}+1,modified_i) & v_i = 1 \\
+	(1,tag,1,0) & v_i = 0 \land i = j
 \end{cases}
 \]
-$$y = (ld,tag)$$
+$$y = ld$$
 
-Промах с вытеснением: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\nexists j: v_j = 0)$
+Промах с вытеснением: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\nexists j: v_j = 0) \land (\exists d: age_d = 32)$
 \[
 s':fulltag'_i =
 \begin{cases}
-	(1,tag_i,age_{i}+1,modified_i) & i : age_i \neq 32 \\
-	(1,tag,1,0) & i : age_i = 32
+	(1,tag_i,age_{i}+1,modified_i) & i \neq d \\
+	(1,tag,1,0) & i = d
 \end{cases}
 \]
 
 \[
 y =
 \begin{cases}
-	(ld+st,tag) & \exists i : age_i = 32 \land modified_i = 1 \\
-	(ld,tag) & \exists i : age_i = 32 \land modified_i = 0
+	ld+st & modified_d = 1 \\
+	ld & modified_d = 0
 \end{cases}
 \]
 
@@ -123,8 +123,8 @@ $$\delta : ((inv,tag),s) \rightarrow s'$$
 \[
 s':fulltag'_i =
 \begin{cases}
-	fulltag_i & v_i = 0 \lor (v_i = 1 \land age_k < age_i)\\
-	(1,tag_i,age_{i}-1,modified_i) & v_i = 1 \land i \neq k \land age_i < age_k \\
+	fulltag_i & v_i = 0 \lor (v_i = 1 \land age_i < age_k)\\
+	(1,tag_i,age_{i}-1,modified_i) & v_i = 1 \land age_i > age_k \\
 	(0,\varnothing) & i = k
 \end{cases}
 \]
@@ -132,14 +132,14 @@ s':fulltag'_i =
 \[
 y =
 \begin{cases}
-	(st,tag) & modified_k = 1 \\
-	(\varnothing,tag) & modified_k = 0
+	st & modified_k = 1 \\
+	\varnothing & modified_k = 0
 \end{cases}
 \]
 
 Промах: $s: \nexists k : v_k = 1 \land tag_k = tag$
 $$s' = s$$
-$$y = (\varnothing,tag)$$
+$$y = \varnothing$$
 
 
 
