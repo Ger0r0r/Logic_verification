@@ -1,4 +1,4 @@
-module top
+module top;
 
 import "DPI-C" pure function int func_fmul_c(input int a, input int b);
 
@@ -33,8 +33,7 @@ initial begin
 		end
 	end
 	else if ($value$plusargs("random_mode=%d", num_of_examples)) begin
-		for (int i = 0; i < num_of_examples; i++)
-		begin
+		for (int i = 0; i < num_of_examples; i++) begin
 			num1 = $urandom();
 			num2 = $urandom();
 			calc();
