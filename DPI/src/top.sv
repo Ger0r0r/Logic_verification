@@ -68,14 +68,17 @@ initial begin
 	$finish;
 end
 
-FMUL32 v_FMUL (
-	clk(clk),
-	op1(num1),
-	op2(num2),
-	opc(opc),
-	r_mode(2'b0),
-	result(v_res),
-	val(val)
+FMUL32 #(
+	.DATA_W(32),
+	.OPERATION_NUM(4)
+) v_FMUL (
+	.clk(clk),
+	.op1(num1),
+	.op2(num2),
+	.opc(opc),
+	.r_mode(2'b0),
+	.result(v_res),
+	.val(val)
 );
 
 task calc();
