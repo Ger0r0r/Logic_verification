@@ -68,13 +68,6 @@ initial begin
 	$finish;
 end
 
-task calc();
-    $display("Calculate %x x %x", num1, num2);
-
-    c_res = func_fmul_c(num1, num2);
-
-endtask
-
 FMUL32 v_FMUL (
 	clk(clk),
 	op1(num1),
@@ -85,6 +78,11 @@ FMUL32 v_FMUL (
 	val(val)
 );
 
+task calc();
+    $display("Calculate %x x %x", num1, num2);
 
+    c_res = func_fmul_c(num1, num2);
+
+endtask
 
 endmodule
