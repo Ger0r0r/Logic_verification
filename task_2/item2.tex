@@ -24,7 +24,8 @@ $$A_m = (S_t,X,Y,\delta:S\times X \rightarrow S, s_0 \in S, \lambda : S\times X 
 
 	\item Начальное состояние -- $s_0 = [(0, \varnothing),(0, \varnothing),...,(0, \varnothing)]$
 	\item Входной алфавит -- $X = \{ld,st,inv\}\times\{tag_i,i=\overline{0,32}\}$
-	\item Выходной алфавит -- $Y = \{ld,st,st+ld,\varnothing\}$
+	\item Выходной алфавит -- $Y = $ \\
+	$ = \left(\{ld,st\}\times\{tag_i\}\right) \cup \left(\{ld\}\times\{tag_i\}+\{st\}\times\{tag_j\}\right)\cup\varnothing;~i,j: (i\neq j) \land i,j \in \{0, 1, \dots, 32\}$
 	\item Функции переходов -- $\delta: (s,x)\rightarrow s'$
 	\item Функции выходов -- $\lambda: (s,x) \rightarrow y$
 \end{itemize}
@@ -53,7 +54,7 @@ s':fulltag'_i =
 	(1,tag,1,1) & v_i = 0 \land i = j
 \end{cases}
 \]
-$$y = ld$$
+$$y = ld,tag$$
 
 Промах с вытеснением: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\nexists j: v_j = 0) \land (\exists d: age_d = 32)$
 \[
@@ -67,8 +68,8 @@ s':fulltag'_i =
 \[
 y =
 \begin{cases}
-	ld+st & modified_d = 1 \\
-	ld & modified_d = 0
+	ld,tag+st,tag_d & modified_d = 1 \\
+	ld,tag & modified_d = 0
 \end{cases}
 \]
 
@@ -96,7 +97,7 @@ s':fulltag'_i =
 	(1,tag,1,0) & v_i = 0 \land i = j
 \end{cases}
 \]
-$$y = ld$$
+$$y = ld,tag$$
 
 Промах с вытеснением: $s: (\nexists k : v_k = 1 \land tag_k = tag) \land (\nexists j: v_j = 0) \land (\exists d: age_d = 32)$
 \[
@@ -110,8 +111,8 @@ s':fulltag'_i =
 \[
 y =
 \begin{cases}
-	ld+st & modified_d = 1 \\
-	ld & modified_d = 0
+	ld,tag+st,tag_d & modified_d = 1 \\
+	ld,tag & modified_d = 0
 \end{cases}
 \]
 
@@ -132,7 +133,7 @@ s':fulltag'_i =
 \[
 y =
 \begin{cases}
-	st & modified_k = 1 \\
+	st,tag & modified_k = 1 \\
 	\varnothing & modified_k = 0
 \end{cases}
 \]
