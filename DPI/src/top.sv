@@ -15,6 +15,8 @@ string line;
 int data;
 int num_of_examples;
 int c_res;
+int num1;
+int num2;
 
 wire [31:0] v_res;
 reg [1:0] opc;
