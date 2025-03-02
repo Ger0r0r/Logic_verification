@@ -6,7 +6,7 @@ reg clk;
 initial begin
 	clk = 1'b0;
 	forever begin
-		#1 clk <= ~clk;
+		#1 clk = ~clk;
 	end
 end
 
@@ -42,25 +42,25 @@ initial begin
 		end
 	end
 
-	opc <= 2'b00; #10
+	opc = 2'b00; #10
 
 	$display("Try v_mul %x x %x", num1, num2);
 	$display("Res %x", v_res);
 	$display("Val %x", val);
 	$display("");
-	opc <= 2'b01; #10
+	opc = 2'b01; #10
 
 	$display("Try v_mul %x x %x", num1, num2);
 	$display("Res %x", v_res);
 	$display("Val %x", val);
 	$display("");
-	opc <= 2'b10; #10
+	opc = 2'b10; #10
 
 	$display("Try v_mul %x x %x", num1, num2);
 	$display("Res %x", v_res);
 	$display("Val %x", val);
 	$display("");
-	opc <= 2'b11; #10
+	opc = 2'b11; #10
 
 	$display("Try v_mul %x x %x", num1, num2);
 	$display("Res %x", v_res);

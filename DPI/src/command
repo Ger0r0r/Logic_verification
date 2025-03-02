@@ -4,7 +4,7 @@ WORK_PATH='/mnt/h/PROJECTS/Verification/DPI'
 
 FMUL_SRC=$(find $WORK_PATH/FMUL/ -name "\.v")
 
-verilator -Wno-lint --binary --vpi \
+verilator -Wno-lint --binary --vpi -Wno-UNOPTFLAT \
     $WORK_PATH/src/top.sv \
     $WORK_PATH/src/func.c \
     $FMUL_SRC \
