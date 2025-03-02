@@ -22,7 +22,7 @@ wire val;
 
 initial begin
 
-	if ($value$plusargs("num1=%x", num1) and $value$plusargs("num2=%x", num2)) begin
+	if ($value$plusargs("num1=%x", num1) && $value$plusargs("num2=%x", num2)) begin
 		calc();
 	end
 	else if ($value$plusargs("file=%s", file)) begin
